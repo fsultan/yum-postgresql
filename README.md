@@ -5,10 +5,6 @@ Chef Cookbook to manage the postgresql PGDG repositories
 ## Supported Platforms
 
 * CentOS >= 5
-* Fedora >= 18
-* Red Hat Enterprise Linux >= 5
-* Scientific Linux >= 5
-* Oracle Enterprise Linux = 6
 
 ## Supported PostgreSQL versions
 

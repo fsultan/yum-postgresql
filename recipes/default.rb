@@ -15,28 +15,12 @@ unless ['x86_64', 'i386'].include? node['yum']['postgresql']['arch']
   Chef::Log.error("Unsupported arch")
 end
 
-if platform_family?("rhel")
-   repo_url_base = "http://yum.postgresql.org/#{pg_ver}/redhat"
- else
-   repo_url_base = "http://yum.postgresql.org/#{pg_ver}/#{node['platform_family']}"
-end
+pg_ver = node['yum']['postgresql']['version']
+pg_ver_txt = pg_ver.gsub(/\./, "")
 
-pg_ver = node['yum']['postgresql']['ver']
+platform_ver_major = node['platform_version'][0,1] 
 
-case node["platform"]
-when "fedora"
-  pkg_name = %{pgdg-fedora#{pg_ver.sub! "." ""}-#{:pg_ver}-1.noarch.rpm}
-when "redhat"
-  pkg_name = %{pgdg-redhat#{pg_ver.sub! "." ""}-#{:pg_ver}-1.noarch.rpm}
-when "scientific"
-  pkg_name = %{pgdg-sl#{pg_ver.sub! "." ""}-#{:pg_ver}-1.noarch.rpm}
-when "oraclelinux"
-  pkg_name = %{pgdg-oraclelinux#{pg_ver.sub! "." ""}-#{:pg_ver}-1.noarch.rpm}
-when "centos"
-  pkg_name = %{pgdg-centos#{pg_ver.sub! "." ""}-#{:pg_ver}-1.noarch.rpm}
-end
-
-package_url = "#{:repo_url_base}/#{:pkg_name}"
+package_url = node.default['yum']['postgresql'][pg_ver]["#{node["platform"]}"][platform_ver_major]["#{node['yum']['postgresql']['arch']}"]['url']
 
 execute "install repo" do
   user "root"
